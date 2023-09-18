@@ -1,17 +1,29 @@
 // Virtual entry point for the app
 import * as remixBuild from '@remix-run/dev/server-build';
-import {createStorefrontClient, storefrontRedirect} from '@shopify/hydrogen';
 import {
   createRequestHandler,
   getStorefrontHeaders,
-  createCookieSessionStorage,
 } from '@shopify/remix-oxygen';
+import {
+  cartGetIdDefault,
+  cartSetIdDefault,
+  createCartHandler,
+  createStorefrontClient,
+  storefrontRedirect,
+} from '@shopify/hydrogen';
+
+import {HydrogenSession} from '~/lib/session.server';
+import {getLocaleFromRequest} from '~/lib/utils';
 
 /**
  * Export a fetch handler in module format.
  */
 export default {
-  async fetch(request, env, executionContext) {
+  async fetch(
+    request: Request,
+    env: Env,
+    executionContext: ExecutionContext,
+  ): Promise<Response> {
     try {
       /**
        * Open a cache instance in the worker and a custom session instance.
@@ -20,7 +32,7 @@ export default {
         throw new Error('SESSION_SECRET environment variable is not set');
       }
 
-      const waitUntil = (p) => executionContext.waitUntil(p);
+      const waitUntil = (p: Promise<any>) => executionContext.waitUntil(p);
       const [cache, session] = await Promise.all([
         caches.open('hydrogen'),
         HydrogenSession.init(request, [env.SESSION_SECRET]),
@@ -32,12 +44,18 @@ export default {
       const {storefront} = createStorefrontClient({
         cache,
         waitUntil,
-        i18n: {language: 'EN', country: 'US'},
+        i18n: getLocaleFromRequest(request),
         publicStorefrontToken: env.PUBLIC_STOREFRONT_API_TOKEN,
         privateStorefrontToken: env.PRIVATE_STOREFRONT_API_TOKEN,
         storeDomain: env.PUBLIC_STORE_DOMAIN,
         storefrontId: env.PUBLIC_STOREFRONT_ID,
         storefrontHeaders: getStorefrontHeaders(request),
+      });
+
+      const cart = createCartHandler({
+        storefront,
+        getCartId: cartGetIdDefault(request.headers),
+        setCartId: cartSetIdDefault(),
       });
 
       /**
@@ -47,7 +65,13 @@ export default {
       const handleRequest = createRequestHandler({
         build: remixBuild,
         mode: process.env.NODE_ENV,
-        getLoadContext: () => ({session, storefront, env, waitUntil}),
+        getLoadContext: () => ({
+          session,
+          waitUntil,
+          storefront,
+          cart,
+          env,
+        }),
       });
 
       const response = await handleRequest(request);
@@ -69,61 +93,3 @@ export default {
     }
   },
 };
-
-/**
- * This is a custom session implementation for your Hydrogen shop.
- * Feel free to customize it to your needs, add helper methods, or
- * swap out the cookie-based implementation with something else!
- */
-export class HydrogenSession {
-  sessionStorage;
-  session;
-  constructor(sessionStorage, session) {
-    this.sessionStorage = sessionStorage;
-    this.session = session;
-  }
-
-  static async init(request, secrets) {
-    const storage = createCookieSessionStorage({
-      cookie: {
-        name: 'session',
-        httpOnly: true,
-        path: '/',
-        sameSite: 'lax',
-        secrets,
-      },
-    });
-
-    const session = await storage.getSession(request.headers.get('Cookie'));
-
-    return new this(storage, session);
-  }
-
-  has(key) {
-    return this.session.has(key);
-  }
-
-  get(key) {
-    return this.session.get(key);
-  }
-
-  destroy() {
-    return this.sessionStorage.destroySession(this.session);
-  }
-
-  flash(key, value) {
-    this.session.flash(key, value);
-  }
-
-  unset(key) {
-    this.session.unset(key);
-  }
-
-  set(key, value) {
-    this.session.set(key, value);
-  }
-
-  commit() {
-    return this.sessionStorage.commitSession(this.session);
-  }
-}
