@@ -33,7 +33,7 @@ export function Hero({
     <Link to={`/collections/${handle}`}>
       <section
         className={clsx(
-          'relative justify-end flex flex-col w-full',
+          'relative justify-center flex flex-col w-full',
           top && '-mt-nav',
           height === 'full'
             ? 'h-screen'
@@ -54,28 +54,20 @@ export function Hero({
               />
             </div>
           )}
-          {spreadSecondary?.reference && (
-            <div className="hidden md:block">
-              <SpreadMedia
-                sizes="50vw"
-                data={spreadSecondary.reference as Media}
-                loading={loading}
-              />
-            </div>
-          )}
+
         </div>
-        <div className="flex flex-col items-baseline justify-between gap-4 px-6 py-8 sm:px-8 md:px-12 bg-gradient-to-t dark:from-contrast/60 dark:text-primary from-primary/60 text-contrast">
+        <div className="flex flex-col items-baseline justify-between gap-4 px-6 py-8 sm:px-8 md:px-12">
           {heading?.value && (
-            <Heading format as="h2" size="display" className="max-w-md">
+            <Heading format as="h2" size="display" className="max-w-md text-zinc-800">
               {heading.value}
             </Heading>
           )}
           {byline?.value && (
-            <Text format width="narrow" as="p" size="lead">
+            <Text format width="narrow" as="p" size="lead" className='text-zinc-800'>
               {byline.value}
             </Text>
           )}
-          {cta?.value && <Text size="lead">{cta.value}</Text>}
+          {cta?.value && <button className='bg-zinc-600 text-white px-4 py-3'>{cta.value}</button>}
         </div>
       </section>
     </Link>
@@ -92,7 +84,7 @@ function SpreadMedia({data, loading, sizes}: SpreadMediaProps) {
   return (
     <MediaFile
       data={data}
-      className="block object-cover w-full h-full"
+      className="block object-cover object-top w-full h-full"
       mediaOptions={{
         video: {
           controls: false,

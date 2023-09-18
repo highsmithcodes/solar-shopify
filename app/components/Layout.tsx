@@ -188,8 +188,8 @@ function MobileHeader({
       role="banner"
       className={`${
         isHome
-          ? 'bg-primary/80 dark:bg-contrast/60 text-contrast dark:text-primary shadow-darkHeader'
-          : 'bg-contrast/80 text-primary'
+          ? 'bg-primary/100 dark:bg-contrast/100 text-contrast dark:text-primary shadow-darkHeader'
+          : 'bg-contrast/100 text-primary'
       } flex lg:hidden items-center h-nav sticky backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-4 px-4 md:px-8`}
     >
       <div className="flex items-center justify-start w-full gap-4">
@@ -237,7 +237,7 @@ function MobileHeader({
       </Link>
 
       <div className="flex items-center justify-end w-full gap-4">
-        <AccountLink className="relative flex items-center justify-center w-8 h-8" />
+        {/* <AccountLink className="relative flex items-center justify-center w-8 h-8" /> */}
         <CartCount isHome={isHome} openCart={openCart} />
       </div>
     </header>
@@ -262,59 +262,63 @@ function DesktopHeader({
       role="banner"
       className={`${
         isHome
-          ? 'bg-primary/80 dark:bg-contrast/60 text-contrast dark:text-primary shadow-darkHeader'
-          : 'bg-contrast/80 text-primary'
+          ? ''
+          : ''
       } ${
         !isHome && y > 50 && ' shadow-lightHeader'
-      } hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-8 px-12 py-8`}
+      } sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between w-full leading-none `}
     >
-      <div className="flex gap-12">
-        <Link className="font-bold" to="/" prefetch="intent">
-          {title}
-        </Link>
-        <nav className="flex gap-8">
-          {/* Top level menu items */}
-          {(menu?.items || []).map((item) => (
-            <Link
-              key={item.id}
-              to={item.to}
-              target={item.target}
-              prefetch="intent"
-              className={({isActive}) =>
-                isActive ? 'pb-1 border-b -mb-px' : 'pb-1'
-              }
-            >
-              {item.title}
-            </Link>
-          ))}
-        </nav>
-      </div>
-      <div className="flex items-center gap-1">
-        <Form
-          method="get"
-          action={params.locale ? `/${params.locale}/search` : '/search'}
-          className="flex items-center gap-2"
-        >
-          <Input
-            className={
-              isHome
-                ? 'focus:border-contrast/20 dark:focus:border-primary/20'
-                : 'focus:border-primary/20'
-            }
-            type="search"
-            variant="minisearch"
-            placeholder="Search"
-            name="q"
-          />
-          <button
-            type="submit"
-            className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5"
+      <div className="bg-zinc-700 flex flex-row w-100 justify-between align-center min-w-full hidden h-nav lg:flex lg:flex-column items-center gap-8 px-12 py-8">
+        <div className="flex gap-12">
+          <Link className="font-bold" to="/" prefetch="intent">
+            {title}
+          </Link>
+        </div>
+        <div className="flex items-center gap-1">
+          <Form
+            method="get"
+            action={params.locale ? `/${params.locale}/search` : '/search'}
+            className="flex items-center gap-0"
           >
-            <IconSearch />
-          </button>
-        </Form>
-        <AccountLink className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5" />
-        <CartCount isHome={isHome} openCart={openCart} />
+            <Input
+              className={
+                isHome
+                  ? 'focus:border-contrast/20 bg-zinc-600 text-white placeholder:text-white dark:focus:border-primary/20 px-4'
+                  : 'focus:border-primary/20 bg-zinc-600 text-white placeholder:text-white px-4'
+              }
+              type="search"
+              variant="minisearch"
+              placeholder="Search"
+              name="q"
+            />
+            <button
+              type="submit"
+              className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5 bg-amber-400"
+            >
+              <IconSearch className='text-black' />
+            </button>
+          </Form>
+          {/* <AccountLink className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5" /> */}
+          <CartCount isHome={isHome} openCart={openCart} />
+        </div>
+      </div>
+      <div className='hidden lg:flex px-12 py-6 bg-zinc-800'>
+        <nav className="flex gap-8">
+            {/* Top level menu items */}
+            {(menu?.items || []).map((item) => (
+              <Link
+                key={item.id}
+                to={item.to}
+                target={item.target}
+                prefetch="intent"
+                className={({isActive}) =>
+                  isActive ? 'pb-1 border-b -mb-px' : 'pb-1'
+                }
+              >
+                {item.title}
+              </Link>
+            ))}
+          </nav>
       </div>
     </header>
   );
