@@ -3,6 +3,7 @@ import {useWindowScroll} from 'react-use';
 import {Disclosure} from '@headlessui/react';
 import {Suspense, useEffect, useMemo} from 'react';
 import {CartForm} from '@shopify/hydrogen';
+import logo from '../images/mountain-shop-logo.png';
 
 import type {LayoutQuery} from 'storefrontapi.generated';
 import {
@@ -232,7 +233,7 @@ function MobileHeader({
           className="font-bold text-center leading-none"
           as={isHome ? 'h1' : 'h2'}
         >
-          {title}
+          <img src={logo} width={100} height={30} />
         </Heading>
       </Link>
 
@@ -270,8 +271,8 @@ function DesktopHeader({
     >
       <div className="bg-zinc-700 flex flex-row w-100 justify-between align-center min-w-full hidden h-nav lg:flex lg:flex-column items-center gap-8 px-12 py-8">
         <div className="flex gap-12">
-          <Link className="font-bold" to="/" prefetch="intent">
-            {title}
+          <Link className="font-bold text-white" to="/" prefetch="intent">
+            <img src={logo} width={120} height={30} />
           </Link>
         </div>
         <div className="flex items-center gap-1">
@@ -312,7 +313,7 @@ function DesktopHeader({
                 target={item.target}
                 prefetch="intent"
                 className={({isActive}) =>
-                  isActive ? 'pb-1 border-b -mb-px' : 'pb-1'
+                  isActive ? 'pb-1 border-b -mb-px text-white' : 'pb-1 text-white'
                 }
               >
                 {item.title}
@@ -394,14 +395,14 @@ function Badge({
   return isHydrated ? (
     <button
       onClick={openCart}
-      className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5"
+      className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5 text-white"
     >
       {BadgeCounter}
     </button>
   ) : (
     <Link
       to="/cart"
-      className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5"
+      className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5 text-white"
     >
       {BadgeCounter}
     </Link>
@@ -429,8 +430,7 @@ function Footer({menu}: {menu?: EnhancedMenu}) {
       <div
         className={`self-end pt-8 opacity-50 md:col-span-2 lg:col-span-${itemsCount}`}
       >
-        &copy; {new Date().getFullYear()} / Shopify, Inc. Hydrogen is an MIT
-        Licensed Open Source project.
+        &copy; {new Date().getFullYear()} / Mountain Shop
       </div>
     </Section>
   );
