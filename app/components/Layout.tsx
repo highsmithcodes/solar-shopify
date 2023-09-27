@@ -3,7 +3,7 @@ import {useWindowScroll} from 'react-use';
 import {Disclosure} from '@headlessui/react';
 import {Suspense, useEffect, useMemo} from 'react';
 import {CartForm} from '@shopify/hydrogen';
-import logo from '../images/mountain-shop-logo.png';
+import logo from '../images/shop-solid-white.svg';
 
 import type {LayoutQuery} from 'storefrontapi.generated';
 import {
@@ -233,7 +233,7 @@ function MobileHeader({
           className="font-bold text-center leading-none"
           as={isHome ? 'h1' : 'h2'}
         >
-          <img src={logo} width={100} height={30} />
+          <img src={logo} width={40} height={30} />
         </Heading>
       </Link>
 
@@ -272,7 +272,7 @@ function DesktopHeader({
       <div className="bg-zinc-700 flex flex-row w-100 justify-between align-center min-w-full hidden h-nav lg:flex lg:flex-column items-center gap-8 px-12 py-8">
         <div className="flex gap-12">
           <Link className="font-bold text-white" to="/" prefetch="intent">
-            <img src={logo} width={120} height={30} />
+            <img src={logo} width={40} height={30} />
           </Link>
         </div>
         <div className="flex items-center gap-1">
