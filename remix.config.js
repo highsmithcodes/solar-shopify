@@ -3,8 +3,7 @@ module.exports = {
   appDirectory: 'app',
   ignoredRouteFiles: ['**/.*'],
   watchPaths: ['./public', './.env'],
-  server:
-    process.env.NODE_ENV === 'development' ? './server-dev.ts' : './server.ts',
+  server: './server.ts',
   /**
    * The following settings are required to deploy Hydrogen apps to Oxygen:
    */
@@ -17,8 +16,8 @@ module.exports = {
   serverModuleFormat: 'esm',
   serverPlatform: 'neutral',
   serverMinify: process.env.NODE_ENV === 'production',
-  postcss: true,
   tailwind: true,
+  postcss: true,
   future: {
     v2_meta: true,
     v2_headers: true,
@@ -27,4 +26,3 @@ module.exports = {
     v2_normalizeFormMethod: true,
   },
 };
-
